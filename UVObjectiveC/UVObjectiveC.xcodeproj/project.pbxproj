@@ -13,7 +13,6 @@
 		AEA0EEC12108C2880021A03C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEA0EEC02108C2880021A03C /* Assets.xcassets */; };
 		AEA0EEC42108C2880021A03C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEA0EEC22108C2880021A03C /* LaunchScreen.storyboard */; };
 		AEA0EEC72108C2880021A03C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA0EEC62108C2880021A03C /* main.m */; };
-		AEA0EED02108C8030021A03C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEA0EECE2108C5FC0021A03C /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +34,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEA0EED02108C8030021A03C /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
