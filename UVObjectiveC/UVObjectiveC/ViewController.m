@@ -47,7 +47,7 @@
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSString *uv = jsonDict[@"result"][@"uv"];
         double result = [uv doubleValue];
-        NSString *locationText = [NSString stringWithFormat:@"uv radiation: %.02f", result];
+        NSString *locationText = [NSString stringWithFormat:@"%.02f", result];
         self->locationLabel.text = locationText;
         [self setStatus:&result];
     });
