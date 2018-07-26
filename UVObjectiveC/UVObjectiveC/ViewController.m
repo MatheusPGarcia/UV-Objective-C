@@ -38,14 +38,19 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
     CLLocation *location = locations.firstObject;
-    [self updateInfo:location];
+    [self request:location];
     [locationManager stopUpdatingLocation];
 }
 
-- (void)updateInfo:(CLLocation *)location {
-    NSString *locationText = [NSString stringWithFormat:@"lat: %f, lon: %f", location.coordinate.latitude, location.coordinate.longitude];
-    [self request:location];
-    locationLabel.text = locationText;
+- (void)updateInfo:(NSDictionary *)jsonDict {
+
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSString *uv = jsonDict[@"result"][@"uv"];
+        double result = [uv doubleValue];
+        NSString *locationText = [NSString stringWithFormat:@"uv radiation: %.02f", result];
+        self->locationLabel.text = locationText;
+        [self setStatus:&result];
+    });
 }
 
 - (void)request:(CLLocation *)location {
@@ -62,14 +67,37 @@
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSString *requestReply = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        NSData * responseData = [requestReply dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *responseData = [requestReply dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&error];
         NSLog(@"requestReply: %@", jsonDict);
+        [self updateInfo:jsonDict];
     }] resume];
 }
 
 - (IBAction)updateWasPressed:(id)sender {
     [locationManager startUpdatingLocation];
+}
+
+- (void)setStatus:(double *)UVValue {
+
+    double compare = *UVValue;
+
+    if (compare < 3.0) {
+        statusLabel.text = @"Low";
+        statusLabel.textColor = UIColor.greenColor;
+    } else if (compare < 6.0) {
+        statusLabel.text = @"Moderate";
+        statusLabel.textColor = UIColor.yellowColor;
+    } else if (compare < 8.0) {
+        statusLabel.text = @"High";
+        statusLabel.textColor = UIColor.orangeColor;
+    } else if (compare < 11.0) {
+        statusLabel.text = @"Very High";
+        statusLabel.textColor = UIColor.redColor;
+    } else {
+        statusLabel.text = @"Extreme";
+        statusLabel.textColor = UIColor.purpleColor;
+    }
 }
 
 @end

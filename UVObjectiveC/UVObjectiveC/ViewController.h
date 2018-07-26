@@ -14,6 +14,7 @@
     CLLocationManager *locationManager;
 
     __weak IBOutlet UILabel *locationLabel;
+    __weak IBOutlet UILabel *statusLabel;
 }
 
 
