@@ -11,10 +11,15 @@
 
 @interface ViewController : UIViewController <CLLocationManagerDelegate> {
 
+    double UVNivel;
     CLLocationManager *locationManager;
 
     __weak IBOutlet UILabel *locationLabel;
     __weak IBOutlet UILabel *statusLabel;
+    __weak IBOutlet UIView *loadingView;
+    __weak IBOutlet UIActivityIndicatorView *activityIndicator;
+    __weak IBOutlet UILabel *updateInfo;
+    __weak IBOutlet UIImageView *sky;
 }
 
 

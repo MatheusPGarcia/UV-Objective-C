@@ -17,6 +17,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    loadingView.hidden = YES;
+    activityIndicator.hidden = YES;
+
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.distanceFilter = kCLDistanceFilterNone;
@@ -47,13 +50,53 @@
     dispatch_sync(dispatch_get_main_queue(), ^{
         NSString *uv = jsonDict[@"result"][@"uv"];
         double result = [uv doubleValue];
+        self->UVNivel = result;
         NSString *locationText = [NSString stringWithFormat:@"%.02f", result];
         self->locationLabel.text = locationText;
         [self setStatus:&result];
+
+        self->loadingView.hidden = YES;
+        self->activityIndicator.hidden = YES;
+        [self->activityIndicator stopAnimating];
+
+        NSString *lastUpdate = [self getCurrentTime];
+        self->updateInfo.text = lastUpdate;
     });
 }
 
+- (NSString *)getCurrentTime {
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitHour + NSCalendarUnitMinute fromDate:now];
+    NSInteger hour = [components hour];
+    NSInteger minute = [components minute];
+
+    NSString *returnString = [NSString stringWithFormat:@"Last updated at "];
+
+    if (hour < 10) {
+        NSString *hourString = [NSString stringWithFormat:@"0%ld:", hour];
+        returnString = [returnString stringByAppendingString:hourString];
+    } else {
+        NSString *hourString = [NSString stringWithFormat:@"%ld:", hour];
+        returnString = [returnString stringByAppendingString:hourString];
+    }
+
+    if (minute < 10) {
+        NSString *minuteString = [NSString stringWithFormat:@"0%ld", minute];
+        returnString = [returnString stringByAppendingString:minuteString];
+    } else {
+        NSString *minuteString = [NSString stringWithFormat:@"%ld", minute];
+        returnString = [returnString stringByAppendingString:minuteString];
+    }
+
+    return returnString;
+}
+
 - (void)request:(CLLocation *)location {
+
+    loadingView.hidden = NO;
+    activityIndicator.hidden = NO;
+    [activityIndicator startAnimating];
 
     NSString *urlString = [NSString stringWithFormat:@"https://api.openuv.io/api/v1/uv?lat=%f&lng=%f", location.coordinate.latitude, location.coordinate.longitude];
     NSString *key = @"c3b27e3623430b041a771d2b9e6af652";
@@ -69,7 +112,6 @@
         NSString *requestReply = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         NSData *responseData = [requestReply dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&error];
-        NSLog(@"requestReply: %@", jsonDict);
         [self updateInfo:jsonDict];
     }] resume];
 }
@@ -77,6 +119,22 @@
 - (IBAction)updateWasPressed:(id)sender {
     [locationManager startUpdatingLocation];
 }
+
+- (IBAction)shareWasPressed:(id)sender {
+
+    NSLog(@"works");
+    NSString *uvInfo = [NSString stringWithFormat:@"%.02f!!!", UVNivel];
+
+    NSString *shareString = [NSString stringWithFormat:@"Hey, the UV nivel right now is "];
+    shareString = [shareString stringByAppendingString:uvInfo];
+
+    NSArray *dataToShare = @[shareString];
+
+    UIActivityViewController* activityViewController =[[UIActivityViewController alloc] initWithActivityItems:dataToShare applicationActivities:nil];
+    activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop];
+    [self presentViewController:activityViewController animated:YES completion:^{}];
+}
+
 
 - (void)setStatus:(double *)UVValue {
 

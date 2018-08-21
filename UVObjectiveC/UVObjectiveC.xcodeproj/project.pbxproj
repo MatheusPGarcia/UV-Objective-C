@@ -27,6 +27,7 @@
 		AEA0EEC52108C2880021A03C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEA0EEC62108C2880021A03C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AEA0EECE2108C5FC0021A03C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		AEEE7921212B768F0033C268 /* UVObjectiveC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UVObjectiveC.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 		AEA0EEB62108C2870021A03C /* UVObjectiveC */ = {
 			isa = PBXGroup;
 			children = (
+				AEEE7921212B768F0033C268 /* UVObjectiveC.entitlements */,
 				AEA0EEB72108C2870021A03C /* AppDelegate.h */,
 				AEA0EEB82108C2870021A03C /* AppDelegate.m */,
 				AEA0EEBA2108C2870021A03C /* ViewController.h */,
@@ -112,6 +114,11 @@
 				TargetAttributes = {
 					AEA0EEB32108C2870021A03C = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.ApplePay = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
